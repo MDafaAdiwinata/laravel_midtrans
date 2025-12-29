@@ -8,6 +8,7 @@ class OrderItem extends Model
 {
     protected $table = "order_items";
     protected $primaryKey = 'id_order_item';
+    public $incrementing = true; // ✅ Tambah ini
 
     protected $fillable = [
         'id_order',
@@ -17,7 +18,7 @@ class OrderItem extends Model
     ];
 
     // relasi item order ini punya 1 product
-    public function pruduct()
+    public function product()
     {
         return $this->belongsTo(Product::class);
     }

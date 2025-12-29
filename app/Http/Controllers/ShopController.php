@@ -20,7 +20,7 @@ class ShopController extends Controller
     public function checkout(Request $request)
     {
         // Ambil data keranjang dari FE
-        $keranjangProducts = $request->item;
+        $keranjangProducts = $request->items;
 
         // Hitung Total
         $total_harga = 0;
@@ -41,8 +41,8 @@ class ShopController extends Controller
         foreach ($keranjangProducts as $item) {
             $product = Product::find($item['id_product']);
             OrderItem::create([
-                'id_order' => $order->id,
-                'id_product' => $product->id,
+                'id_order' => $order->id_order,
+                'id_product' => $product->id_product,
                 'jumlah' => $item['jumlah'],
                 'harga_satuan' => $product->harga
             ]);
@@ -99,7 +99,7 @@ class ShopController extends Controller
         $status = $notif->transaction_status;
         $orderCode = $notif->order_id;
 
-        $order = Order::where('order_code' . $orderCode)->first();
+        $order = Order::where('order_code', $orderCode)->first();
 
         if ($status === 'settlement' || $status === 'capture') {
             $order->status = 'success';
@@ -108,7 +108,7 @@ class ShopController extends Controller
         } else {
             $order->status = 'failed';
             // Kembalikan stok
-            foreach ($order->item as $item) {
+            foreach ($order->items as $item) {
                 $product = $item->product;
                 $product->stok = $product->stok + $item->jumlah;
                 $product->save();

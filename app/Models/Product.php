@@ -8,6 +8,7 @@ class Product extends Model
 {
     protected $table = "products";
     protected $primaryKey = 'id_product';
+    public $incrementing = true;
 
     protected $fillable = [
         'nama',
